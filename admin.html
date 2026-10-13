@@ -1,1 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Luna Piena | Administración</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f8f0ed;
+      color: #60464d;
+      font-family: Georgia, serif;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+    .panel {
+      width: 100%;
+      max-width: 420px;
+      padding: 36px 26px;
+      background: #fffaf7;
+      border: 1px solid #e9cbd0;
+      border-radius: 24px;
+      text-align: center;
+    }
+    h1 { font-weight: normal; }
+    input, button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 14px;
+      border-radius: 12px;
+      font-size: 16px;
+    }
+    input { border: 1px solid #e9cbd0; }
+    button {
+      border: none;
+      background: #b88996;
+      color: white;
+      cursor: pointer;
+    }
+    #mensaje { margin-top: 18px; }
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <div style="font-size:48px;color:#b88996">☾</div>
+    <h1>Luna Piena</h1>
+    <p>Panel de administración</p>
 
+    <form id="login">
+      <input id="email" type="email"
+        placeholder="Correo electrónico"
+        autocomplete="username" required>
+      <input id="password" type="password"
+        placeholder="Contraseña"
+        autocomplete="current-password" required>
+      <button type="submit">Ingresar ♡</button>
+    </form>
+
+    <p id="mensaje" role="status"></p>
+    <section id="contenido" hidden>
+      <h2>Bienvenida ♡</h2>
+      <p>Acceso de administración confirmado.</p>
+      <button id="salir">Cerrar sesión</button>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl =
+      "https://jqojitmrrmjhmcmcczay.supabase.co";
+    const supabaseKey =
+      "sb_publishable_PgyTZJKdI1D-EJnzAGillQ_b80G5Ddk";
+
+    const db = window.supabase.createClient(
+      supabaseUrl, supabaseKey
+    );
+
+    const ADMIN_UID =
+      "48ffda7f-c4f3-419d-9a7a-ad30a1e9ae37";
+
+    const formulario = document.getElementById("login");
+    const mensaje = document.getElementById("mensaje");
+    const contenido = document.getElementById("contenido");
+
+    async function mostrarSesion() {
+      const { data, error } = await db.auth.getUser();
+      const autorizado =
+        !error && data.user?.id === ADMIN_UID;
+
+      formulario.hidden = autorizado;
+      contenido.hidden = !autorizado;
+
+      if (data.user && !autorizado) {
+        await db.auth.signOut();
+        mensaje.textContent = "Cuenta no autorizada.";
+      } else if (autorizado) {
+        mensaje.textContent = "";
+      }
+    }
+
+    formulario.addEventListener("submit", async (evento) => {
+      evento.preventDefault();
+      mensaje.textContent = "Verificando acceso...";
+
+      const email = document.getElementById("email").value;
+      const password =
+        document.getElementById("password").value;
+
+      const { error } = await db.auth.signInWithPassword({
+        email, password
+      });
+
+      if (error) {
+        mensaje.textContent =
+          "No se pudo iniciar sesión. Revisá tus datos.";
+        return;
+      }
+
+      await mostrarSesion();
+    });
+
+    document.getElementById("salir")
+      .addEventListener("click", async () => {
+        await db.auth.signOut();
+        contenido.hidden = true;
+        formulario.hidden = false;
+        document.getElementById("password").value = "";
+        mensaje.textContent = "Sesión cerrada.";
+      });
+
+    mostrarSesion();
+  </script>
+</body>
+</html>
