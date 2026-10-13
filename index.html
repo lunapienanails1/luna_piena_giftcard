@@ -111,12 +111,68 @@
   </a>
 
   <p style="margin-top:24px;">Con amor, Luna Piena Nails</p>
-  </div>in>
+  </div>
+  </main>
 
   <script>
-    function abrirRegalo() {
-      document.getElementById("regalo").style.display = "block";
+  const SUPABASE_URL = "https://jqojitmrrmjhmcmcczay.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_PgyTZJKdI1D-EJnzAGillQ_b80G5Ddk";
+
+  async function abrirRegalo() {
+    const regalo = document.getElementById("regalo");
+    const servicio = document.getElementById("servicio");
+    const vencimiento = document.getElementById("vencimiento");
+
+    regalo.style.display = "block";
+
+    const codigo = new URLSearchParams(window.location.search).get("codigo");
+
+    if (!codigo) {
+      servicio.textContent = "No encontramos el código de tu regalo.";
+      vencimiento.textContent = "Revisá el enlace recibido.";
+      return;
     }
-  </script>
+
+    try {
+      const respuesta = await fetch(
+        `${SUPABASE_URL}/rest/v1/rpc/consultar_giftcard`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_KEY
+          },
+          body: JSON.stringify({ p_codigo: codigo })
+        }
+      );
+
+      if (!respuesta.ok) {
+        throw new Error("Error al consultar Supabase");
+      }
+
+      const datos = await respuesta.json();
+
+      if (!datos.length) {
+        servicio.textContent = "No encontramos esta Gift Card.";
+        vencimiento.textContent = "Consultá con Luna Piena Nails.";
+        return;
+      }
+
+      servicio.textContent = datos[0].servicio || "Servicio pendiente";
+
+      const fecha = datos[0].fecha_vencimiento;
+      if (fecha) {
+        const [anio, mes, dia] = fecha.split("-");
+        vencimiento.textContent = `${dia}/${mes}/${anio}`;
+      } else {
+        vencimiento.textContent = "Consultar vencimiento";
+      }
+
+    } catch (error) {
+      servicio.textContent = "No pudimos cargar tu regalo.";
+      vencimiento.textContent = "Intentá nuevamente más tarde.";
+    }
+  }
+      </script>
 </body>
 </html>
