@@ -64,6 +64,35 @@
       <h2>Bienvenida ♡</h2>
       <p>Acceso de administración confirmado.</p>
       <button id="salir">Cerrar sesión</button>
+      <hr style="margin: 28px 0; border: 0; border-top: 1px solid #e9cbd0;">
+
+<h2>Crear nueva Gift Card ♡</h2>
+
+<form id="formGiftcard">
+  <input id="destinataria" type="text"
+    placeholder="Nombre de quien recibe el regalo" required>
+
+  <input id="remitente" type="text"
+    placeholder="Nombre de quien lo regala" required>
+
+  <select id="servicioGift" required>
+    <option value="">Elegí el servicio</option>
+    <option value="Semipermanente">Semipermanente</option>
+    <option value="Capping">Capping</option>
+    <option value="Soft Gel">Soft Gel</option>
+  </select>
+
+  <textarea id="dedicatoria"
+    placeholder="Escribí una dedicatoria personalizada"
+    rows="4"></textarea>
+
+  <p>Fecha de vencimiento:</p>
+  <input id="fechaGift" type="date" required>
+
+  <button type="submit">Crear Gift Card ♡</button>
+</form>
+
+<p id="resultadoGift" role="status"></p>
     </section>
   </main>
 
