@@ -159,7 +159,47 @@
         document.getElementById("password").value = "";
         mensaje.textContent = "Sesión cerrada.";
       });
+document.getElementById("formGiftcard").addEventListener("submit", async (evento) => {
+  evento.preventDefault();
 
+  const resultado = document.getElementById("resultadoGift");
+  resultado.textContent = "Creando Gift Card...";
+
+  const { data: usuario, error: errorUsuario } = await db.auth.getUser();
+
+  if (errorUsuario || usuario.user?.id !== ADMIN_UID) {
+    resultado.textContent = "No tenés autorización para crear tarjetas.";
+    return;
+  }
+
+  const tarjeta = {
+    nombre_destinataria: document.getElementById("destinataria").value.trim(),
+    nombre_remitente: document.getElementById("remitente").value.trim(),
+    servicio: document.getElementById("servicioGift").value,
+    dedicatoria: document.getElementById("dedicatoria").value.trim(),
+    fecha_vencimiento: document.getElementById("fechaGift").value,
+    estado: "disponible"
+  };
+
+  try {
+    const { data, error } = await db
+      .from("Gift_cards")
+      .insert(tarjeta)
+      .select("codigo")
+      .single();
+
+    if (error) throw error;
+
+    const enlace = new URL("index.html", window.location.href);
+    enlace.searchParams.set("codigo", data.codigo);
+
+    resultado.textContent = "¡Gift Card creada! Enlace: " + enlace.href;
+
+    document.getElementById("formGiftcard").reset();
+  } catch (error) {
+    resultado.textContent = "No se pudo crear la Gift Card: " + error.message;
+  }
+});
     mostrarSesion();
   </script>
 </body>
