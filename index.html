@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Luna Piena Nails | Gift Cards</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f8f0ed;
+      color: #60464d;
+      font-family: Georgia, serif;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .tarjeta {
+      width: 100%;
+      max-width: 420px;
+      padding: 48px 26px;
+      text-align: center;
+      background: #fffaf7;
+      border: 1px solid #e9cbd0;
+      border-radius: 24px;
+      box-shadow: 0 15px 45px #9d737025;
+    }
+
+    .luna {
+      font-size: 55px;
+      color: #b88996;
+    }
+
+    h1 {
+      font-size: 30px;
+      font-weight: normal;
+      letter-spacing: 2px;
+    }
+
+    .subtitulo {
+      color: #b88996;
+      letter-spacing: 4px;
+      font-size: 13px;
+    }
+
+    .mensaje {
+      margin: 35px 0;
+      font-size: 19px;
+      line-height: 1.7;
+    }
+
+    button {
+      background: #b88996;
+      color: white;
+      border: none;
+      padding: 16px 28px;
+      border-radius: 30px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    #regalo {
+      display: none;
+      margin-top: 28px;
+      animation: aparecer 0.8s ease;
+    }
+
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <main class="tarjeta">
+    <div class="luna">☾</div>
+    <h1>Luna Piena</h1>
+    <p class="subtitulo">NAILS · GIFT CARD</p>
+
+    <div class="mensaje">
+      Hay regalos que se convierten
+      en momentos especiales.
+      <p>Hoy alguien pensó en vos ♡</p>
+    </div>
+
+    <button onclick="abrirRegalo()">
+      Descubrí tu regalo ✨
+    </button>
+
+    <div id="regalo">
+      <h2>¡Sorpresa! ♡</h2>
+      <p>Tenés una experiencia de belleza esperándote.</p>
+      <p>Con amor, Luna Piena Nails</p>
+    </div>
+  </main>
+
+  <script>
+    function abrirRegalo() {
+      document.getElementById("regalo").style.display = "block";
+    }
+  </script>
+</body>
+</html>
