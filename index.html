@@ -161,7 +161,13 @@
       }
 
       servicio.textContent = datos[0].servicio || "Servicio pendiente";
+document.getElementById("nombreDestinataria").textContent =
+  datos[0].nombre_destinataria
+    ? "Para " + datos[0].nombre_destinataria + " ♡"
+    : "";
 
+document.getElementById("dedicatoriaRegalo").textContent =
+  datos[0].dedicatoria || "";
       const fecha = datos[0].fecha_vencimiento;
       if (fecha) {
         const [anio, mes, dia] = fecha.split("-");
