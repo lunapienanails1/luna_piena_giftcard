@@ -211,6 +211,69 @@ document.getElementById("formGiftcard").addEventListener("submit", async (evento
     resultado.textContent = "No se pudo crear la Gift Card: " + error.message;
   }
 });
+    
+async function cargarGiftcards() {
+  const lista = document.getElementById("listaGiftcards");
+  const mensaje = document.getElementById("mensajeListado");
+
+  lista.replaceChildren();
+  mensaje.textContent = "Cargando tus Gift Cards...";
+
+  const { data: usuario, error: errorUsuario } =
+    await db.auth.getUser();
+
+  if (errorUsuario || usuario.user?.id !== ADMIN_UID) {
+    mensaje.textContent = "Necesitás iniciar sesión como administradora.";
+    return;
+  }
+
+  const { data, error } = await db
+    .from("Gift_cards")
+    .select("id, nombre_destinataria, servicio, fecha_vencimiento, estado, codigo")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    mensaje.textContent = "No se pudieron cargar las Gift Cards: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    mensaje.textContent = "Todavía no hay Gift Cards creadas.";
+    return;
+  }
+
+  mensaje.textContent = `Tenés ${data.length} Gift Card(s).`;
+
+  data.forEach((tarjeta) => {
+    const caja = document.createElement("div");
+    caja.style.cssText =
+      "padding:16px; margin-top:14px; border:1px solid #e9cbd0; border-radius:12px; text-align:left; overflow-wrap:anywhere;";
+
+    const titulo = document.createElement("strong");
+    titulo.textContent = tarjeta.nombre_destinataria || "Sin destinataria";
+
+    const detalle = document.createElement("p");
+    detalle.textContent =
+      `${tarjeta.servicio || "Sin servicio"} · ${tarjeta.estado || "Sin estado"}`;
+
+    const fecha = document.createElement("p");
+    fecha.textContent =
+      "Vence: " + (tarjeta.fecha_vencimiento || "Sin fecha");
+
+    const enlace = document.createElement("a");
+    enlace.href = "index.html?codigo=" + encodeURIComponent(tarjeta.codigo);
+    enlace.target = "_blank";
+    enlace.rel = "noopener noreferrer";
+    enlace.textContent = "Abrir Gift Card ♡";
+
+    caja.append(titulo, detalle, fecha, enlace);
+    lista.appendChild(caja);
+  });
+}
+
+document.getElementById("verGiftcards")
+  .addEventListener("click", cargarGiftcards);
+
     mostrarSesion();
   </script>
 </body>
