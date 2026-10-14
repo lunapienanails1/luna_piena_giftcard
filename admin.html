@@ -265,8 +265,39 @@ async function cargarGiftcards() {
     enlace.target = "_blank";
     enlace.rel = "noopener noreferrer";
     enlace.textContent = "Abrir Gift Card ♡";
+const botonUtilizar = document.createElement("button");
 
-    caja.append(titulo, detalle, fecha, enlace);
+botonUtilizar.type = "button";
+
+botonUtilizar.textContent = "Marcar como utilizada ♡";
+
+botonUtilizar.disabled = tarjeta.estado === "utilizada";
+
+botonUtilizar.addEventListener("click", async () => {
+  const confirmar = confirm(
+    "¿Confirmás que esta Gift Card ya fue utilizada?"
+  );
+
+  if (!confirmar) return;
+
+  botonUtilizar.disabled = true;
+
+  const { data: actualizada, error } = await db
+    .from("Gift_cards")
+    .update({ estado: "utilizada" })
+    .eq("id", tarjeta.id)
+    .eq("estado", "disponible")
+    .select("id");
+
+  if (error || !actualizada || actualizada.length !== 1) {
+    alert("No se pudo marcar como utilizada. Revisá su estado.");
+    botonUtilizar.disabled = false;
+    return;
+  }
+
+  await cargarGiftcards();
+});
+    caja.append(titulo, detalle, fecha, enlace, botonUtilizar);
     lista.appendChild(caja);
   });
 }
