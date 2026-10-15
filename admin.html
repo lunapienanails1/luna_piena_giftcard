@@ -290,7 +290,7 @@ botonUtilizar.addEventListener("click", async () => {
     .select("id");
 
   if (error || !actualizada || actualizada.length !== 1) {
-    alert("No se pudo marcar como utilizada. Revisá su estado.");
+    alert("Error: " + (error?.message || "No se actualizó la tarjeta"));
     botonUtilizar.disabled = false;
     return;
   }
