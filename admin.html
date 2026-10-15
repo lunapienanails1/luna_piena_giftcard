@@ -286,7 +286,7 @@ botonUtilizar.addEventListener("click", async () => {
     .from("Gift_cards")
     .update({ estado: "utilizada" })
     .eq("id", tarjeta.id)
-    .eq("estado", "disponible")
+    
     .select("id");
 
   if (error || !actualizada || actualizada.length !== 1) {
