@@ -103,7 +103,7 @@
   <p><strong>Válido hasta:</strong></p>
   <p id="vencimiento">Cargando...</p>
 
-  <a
+  <a id="botonReserva"
     href="https://wa.me/5493413364855?text=Hola%21%20Recib%C3%AD%20una%20Gift%20Card%20de%20Luna%20Piena%20Nails%20y%20quisiera%20reservar%20un%20turno."
     target="_blank"
     rel="noopener noreferrer"
@@ -156,6 +156,7 @@
 if (datos.length && datos[0].estado?.trim() === "utilizada") {
   servicio.textContent = "Esta Gift Card ya fue utilizada ♡";
   vencimiento.textContent = "Este regalo ya fue canjeado.";
+  document.getElementById("botonReserva").style.display = "none";
   return;
 }
       if (!datos.length) {
