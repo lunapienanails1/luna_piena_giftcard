@@ -290,7 +290,12 @@ botonUtilizar.addEventListener("click", async () => {
     .select("id");
 
   if (error || !actualizada || actualizada.length !== 1) {
-    alert("Error: " + (error?.message || "No se actualizó la tarjeta"));
+    alert(
+  "ID: " + tarjeta.id +
+  "\nEstado: " + JSON.stringify(tarjeta.estado) +
+  "\nFilas actualizadas: " + (actualizada?.length ?? 0) +
+  "\nError: " + (error?.message ?? "ninguno")
+);
     botonUtilizar.disabled = false;
     return;
   }
